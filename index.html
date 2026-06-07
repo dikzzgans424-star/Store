@@ -59,7 +59,7 @@
                 </div>
             </div>
             <button onclick="prosesLogin()" id="btn-login" class="w-full bg-neon text-dark font-extrabold py-3.5 rounded-xl text-sm neon-glow hover:bg-white transition-all duration-300">Verifikasi Masuk</button>
-            <p id="pesan-notif" class="text-center text-sm font-medium mt-3 h-5"></p>
+            <p id="pesan-notif" class="text-center text-sm font-medium mt-3 h-5 text-neon"></p>
         </div>
     </div>
 
@@ -132,7 +132,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const savedWA = localStorage.getItem('nexus_wa');
-            if (savedWA) { document.getElementById('input-wa').value = savedWA; prosesLogin(); }
+            if (savedWA) { 
+                document.getElementById('input-wa').value = savedWA; 
+                prosesLogin(); 
+            }
         });
 
         async function prosesLogin() {
@@ -141,13 +144,17 @@
             const notif = document.getElementById('pesan-notif');
             const btnLogin = document.getElementById('btn-login');
 
-            if (!inputWa) return;
+            if (!inputWa) {
+                notif.className = "text-center text-sm font-medium mt-3 h-5 text-red-500";
+                notif.innerText = "Nomor tidak boleh kosong!";
+                return;
+            }
+            
             btnLogin.disabled = true;
             notif.className = "text-center text-sm font-medium mt-3 h-5 text-neon";
             notif.innerText = "Connecting to Pterodactyl...";
 
             try {
-                // Membaca database menggunakan generator URL AllOrigins dari config.js
                 const response = await fetch(CONFIG.PANEL_URL);
                 if (!response.ok) throw new Error("Gagal mengambil data dari server panel.");
                 
@@ -157,7 +164,6 @@
                 let userProfile = null;
                 let isOwnerGroup = false;
 
-                // Memisahkan pencarian kelompok "set" (Owner) dan "users" (Member)
                 if (database.set && database.set[userKey]) {
                     userProfile = database.set[userKey];
                     isOwnerGroup = true;
@@ -166,7 +172,6 @@
                 }
 
                 if (userProfile) {
-                    // Proteksi Keamanan Member
                     if (!isOwnerGroup) {
                         if (userProfile.registered !== true) throw new Error("Nomor belum terdaftar di sistem bot!");
                         if (!inputSn) throw new Error("Serial Number (SN) wajib diisi!");
@@ -177,7 +182,6 @@
 
                     localStorage.setItem('nexus_wa', inputWa);
 
-                    // Sinkronisasi data ke tampilan panel UI
                     document.getElementById('view-name').innerText = userProfile.name || (isOwnerGroup ? "Sistem Developer / Owner" : "Tanpa Nama");
                     document.getElementById('view-wa').innerText = `+${inputWa}`;
                     document.getElementById('view-uang').innerText = `Rp ${Number(userProfile.uang || 0).toLocaleString('id-ID')}`;
@@ -185,12 +189,11 @@
                     document.getElementById('view-limit').innerText = userProfile.limit || 0;
                     document.getElementById('view-tag').innerText = userProfile.tag || (isOwnerGroup ? "Developer" : "Member");
                     document.getElementById('view-age').innerText = userProfile.age || "-";
-                    document.getElementById('view-sn').innerText = userProfile.sn || "Bypassed (Owner)");
+                    document.getElementById('view-sn').innerText = userProfile.sn || "Bypassed (Owner)";
 
                     document.getElementById('view-vip').className = (userProfile.vip || userProfile.owneronly) ? "text-[10px] font-bold bg-gold/20 text-gold border border-gold/50 px-2 py-0.5 rounded-full uppercase" : "hidden";
                     document.getElementById('banned-banner').className = userProfile.banned ? "bg-red-500/20 border-b border-red-500/30 p-3 text-center" : "hidden";
 
-                    // Aktifkan Konsol Editor jika nomor yang masuk adalah Owner/Group "set"
                     if (isOwnerGroup || userProfile.owneronly === true) {
                         document.getElementById('owner-edit-panel').classList.remove('hidden');
                     }
@@ -214,7 +217,6 @@
             }
         }
 
-        // FUNGSI INTI UNTUK ADD, SET, DAN DELETE (BANNED) VIA EXPRESS API
         async function eksekusiEditUser() {
             const targetWa = document.getElementById('edit-target-wa').value.trim();
             let action = document.getElementById('edit-action').value;
@@ -224,11 +226,9 @@
 
             if(!targetWa) return alert("Harap masukkan nomor WhatsApp target!");
             
-            // Pengkondisian Khusus untuk Menu Delete / Banned
             if (action === 'set_banned') {
-                action = 'set_vip'; // Menembak variabel vip
-                amount = 'false';  // Menurunkan status
-                // Kamu juga bisa menyesuaikan aksi penambahan ban di webapi jika dibutuhkan
+                action = 'set_vip'; 
+                amount = 'false';  
             }
 
             if(!amount) return alert("Harap isi kolom Nilai / Value!");
@@ -238,7 +238,6 @@
             editNotif.innerText = "";
 
             try {
-                // Menembak port Express bot kamu (4510) secara langsung
                 const response = await fetch(`${CONFIG.BOT_API_URL}/api/update-user`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -256,7 +255,6 @@
                     editNotif.className = "text-xs text-center font-bold text-green-400";
                     editNotif.innerText = `Sukses: ${hasil.msg}`;
                     
-                    // Otomatis refresh data di layar jika kamu mengedit akunmu sendiri
                     if(targetWa === localStorage.getItem('nexus_wa')) {
                         setTimeout(() => prosesLogin(), 1200);
                     }
@@ -279,6 +277,7 @@
             document.getElementById('owner-edit-panel').classList.add('hidden');
             document.getElementById('dashboard-section').style.display = 'none';
             document.getElementById('login-section').style.display = 'block';
+            document.getElementById('pesan-notif').innerText = "";
         }
     </script>
 </body>
