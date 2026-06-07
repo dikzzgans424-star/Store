@@ -8,7 +8,7 @@ const CONFIG = {
     
     // ⚠️ MASUKKAN API KEY KAMU DI SINI ⚠️
     // Buat dulu di menu "Account API" pada panel erine.jkt48-private.com kamu
-    API_KEY: "ptlc_IsiDenganClientApiKeyKamu", 
+    API_KEY: "ptlc_WBvDChLSbHOngjPb4nYyMYw2kN4M46xgp1bXAJHmV0f", 
     
     // Letak file database sesuai dengan struktur folder kamu
     NAMA_FILE_DB: "database/database.json" 
