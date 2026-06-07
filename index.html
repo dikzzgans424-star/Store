@@ -155,10 +155,19 @@
             notif.innerText = "Connecting to Pterodactyl...";
 
             try {
-                const response = await fetch(CONFIG.PANEL_URL);
-                if (!response.ok) throw new Error("Gagal mengambil data dari server panel.");
+                // Mengirim token Bearer API KEY langsung ke sistem proxy internal Edge Function Netlify
+                const response = await fetch(CONFIG.PANEL_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${CONFIG.API_KEY}`
+                    }
+                });
+
+                if (!response.ok) throw new Error("Gagal mengambil data dari server panel. Cek API Key.");
                 
                 const database = await response.json();
+                if (database.error) throw new Error("Proxy Error: " + database.error);
+
                 const userKey = `${inputWa}@s.whatsapp.net`;
                 
                 let userProfile = null;
