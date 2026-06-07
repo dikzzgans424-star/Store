@@ -10,7 +10,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { neon: '#00D4FF', dark: '#0A0A0A' },
+                    colors: { neon: '#00D4FF', dark: '#0A0A0A', gold: '#FFD700' },
                     fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
@@ -25,7 +25,6 @@
     <style>
         body { background-color: #0A0A0A; color: #FFF; overflow-x: hidden; }
         
-        /* Glassmorphism Premium */
         .glass-panel {
             background: rgba(20, 20, 20, 0.6);
             backdrop-filter: blur(16px);
@@ -34,12 +33,12 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
         
-        /* Neon Glow Effects */
         .neon-glow { box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+        .gold-glow { box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+        
         .input-glass { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s; }
         .input-glass:focus { border-color: #00D4FF; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); outline: none; }
         
-        /* Smooth Fade Animation */
         .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -77,59 +76,65 @@
 
     <div id="dashboard-section" class="w-full max-w-xl glass-panel rounded-2xl relative z-10 hidden fade-in overflow-hidden">
         
-        <div class="bg-white/5 border-b border-white/5 p-6 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-neon/20 flex items-center justify-center border border-neon/50">
-                    <i class="fas fa-user text-neon"></i>
+        <div class="bg-white/5 border-b border-white/5 p-6 flex justify-between items-center relative overflow-hidden">
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-12 h-12 rounded-full bg-neon/20 flex items-center justify-center border border-neon/50">
+                    <i class="fas fa-user-astronaut text-neon text-lg"></i>
                 </div>
                 <div>
-                    <h3 class="font-bold text-sm text-white">Profil Member</h3>
-                    <p class="text-xs text-gray-400 font-mono" id="view-wa">628xxx</p>
+                    <h3 class="font-bold text-lg text-white" id="view-name">Nama User</h3>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-gray-400 font-mono" id="view-wa">628xxx</p>
+                        <span id="view-vip" class="hidden text-[10px] font-bold bg-gold/20 text-gold border border-gold/50 px-2 py-0.5 rounded-full uppercase">VIP</span>
+                    </div>
                 </div>
             </div>
-            <button onclick="keluarAkun()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg text-xs font-bold transition">
-                <i class="fas fa-sign-out-alt mr-1"></i> Keluar
+            <button onclick="keluarAkun()" class="relative z-10 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg text-xs font-bold transition">
+                <i class="fas fa-sign-out-alt"></i>
             </button>
+        </div>
+
+        <div id="banned-banner" class="hidden bg-red-500/20 border-b border-red-500/30 p-3 text-center">
+            <p class="text-xs font-bold text-red-400 uppercase tracking-wider"><i class="fas fa-ban mr-1"></i> Akun Anda telah dibanned dari sistem Bot</p>
         </div>
 
         <div class="p-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-wallet mr-1"></i> Saldo Akun</p>
-                    <h4 class="text-2xl font-black text-white" id="view-money">Rp 0</h4>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-wallet mr-1"></i> Saldo Dompet</p>
+                    <h4 class="text-2xl font-black text-white" id="view-uang">Rp 0</h4>
                 </div>
 
                 <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-bolt mr-1"></i> Limit Penggunaan</p>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-building-columns mr-1"></i> Saldo Bank</p>
+                    <h4 class="text-2xl font-black text-white" id="view-bank">Rp 0</h4>
+                </div>
+
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-bolt mr-1"></i> Limit Tersedia</p>
                     <h4 class="text-2xl font-black text-neon" id="view-limit">0 <span class="text-sm font-medium text-gray-500">Aksi</span></h4>
                 </div>
 
                 <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-star mr-1"></i> Level Rank</p>
-                    <h4 class="text-2xl font-black text-white" id="view-level">1</h4>
-                </div>
-
-                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-crown mr-1"></i> Status Member</p>
-                    <h4 class="text-2xl font-black text-yellow-400" id="view-role">User</h4>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-tags mr-1"></i> Status Tag</p>
+                    <h4 class="text-xl font-bold text-emerald-400 truncate" id="view-tag">Member</h4>
                 </div>
 
             </div>
             
-            <div class="mt-6 text-center text-xs text-gray-500">
-                Data ditarik secara real-time dari database bot Pterodactyl.
+            <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                <p class="text-[10px] text-gray-500 font-mono">SN: <span id="view-sn">...</span></p>
+                <p class="text-[10px] text-gray-500">Umur Terdaftar: <span id="view-age" class="font-bold text-gray-300">0</span> Thn</p>
             </div>
         </div>
     </div>
 
 
     <script>
-        // Cek apakah ada session tersimpan saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
             const savedWA = localStorage.getItem('nexus_wa');
             if (savedWA) {
-                // Kalau sudah login sebelumnya, langsung tembak ke proses fetch agar datanya paling baru
                 document.getElementById('input-wa').value = savedWA;
                 prosesLogin(); 
             }
@@ -147,10 +152,9 @@
                 return;
             }
 
-            // Ubah tampilan tombol jadi loading
             btnLogin.disabled = true;
             btnLogin.classList.add('opacity-70');
-            btnText.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Menghubungkan...';
+            btnText.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Mengecek Database...';
             notif.innerText = "";
 
             try {
@@ -170,20 +174,42 @@
 
                 const database = await response.json();
                 
-                // Cari nomor user (Format umumnya pakai @s.whatsapp.net, sesuaikan jika botmu berbeda)
+                // Cari nomor user 
                 const userKey = `${inputWa}@s.whatsapp.net`;
                 const userProfile = database[userKey];
 
                 if (userProfile) {
-                    // Simpan sesi di browser agar tidak perlu login terus
+                    // Cek apakah nomor tersebut terdaftar (registered: true)
+                    if (userProfile.registered === false) {
+                        throw new Error("Nomor belum melakukan register di bot.");
+                    }
+
+                    // Simpan sesi
                     localStorage.setItem('nexus_wa', inputWa);
 
-                    // Isi Data ke Tampilan Dashboard
+                    // Isi Data ke Tampilan Dashboard sesuai Struktur Baru
+                    document.getElementById('view-name').innerText = userProfile.name || "Tanpa Nama";
                     document.getElementById('view-wa').innerText = `+${inputWa}`;
-                    document.getElementById('view-money').innerText = `Rp ${Number(userProfile.money || 0).toLocaleString('id-ID')}`;
+                    document.getElementById('view-uang').innerText = `Rp ${Number(userProfile.uang || 0).toLocaleString('id-ID')}`;
+                    document.getElementById('view-bank').innerText = `Rp ${Number(userProfile.bank || 0).toLocaleString('id-ID')}`;
                     document.getElementById('view-limit').innerText = userProfile.limit || 0;
-                    document.getElementById('view-level').innerText = userProfile.level || 1;
-                    document.getElementById('view-role').innerText = userProfile.role || "Member";
+                    document.getElementById('view-tag').innerText = userProfile.tag || "Member Biasa";
+                    document.getElementById('view-age').innerText = userProfile.age || "?";
+                    document.getElementById('view-sn').innerText = userProfile.sn || "Tidak Ada SN";
+
+                    // Logika Badge VIP
+                    if (userProfile.vip === true) {
+                        document.getElementById('view-vip').classList.remove('hidden');
+                    } else {
+                        document.getElementById('view-vip').classList.add('hidden');
+                    }
+
+                    // Logika Status Banned
+                    if (userProfile.banned === true) {
+                        document.getElementById('banned-banner').classList.remove('hidden');
+                    } else {
+                        document.getElementById('banned-banner').classList.add('hidden');
+                    }
 
                     // Animasi Ganti Halaman
                     notif.className = "text-center text-sm font-medium mt-3 h-5 text-green-400";
@@ -205,7 +231,6 @@
                 }
 
             } catch (error) {
-                // Tampilkan error
                 btnLogin.disabled = false;
                 btnLogin.classList.remove('opacity-70');
                 btnText.innerText = 'Verifikasi Akun';
@@ -216,7 +241,6 @@
         }
 
         function keluarAkun() {
-            // Hapus sesi dan kembalikan ke login
             localStorage.removeItem('nexus_wa');
             document.getElementById('input-wa').value = "";
             document.getElementById('dashboard-section').style.display = 'none';
