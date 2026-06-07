@@ -165,7 +165,10 @@
 
                 if (!response.ok) throw new Error("Gagal mengambil data dari server panel. Cek API Key.");
                 
-                const database = await response.json();
+                // Membaca data sebagai teks dulu, lalu diubah menjadi JSON agar aman dari bug Pterodactyl
+const rawData = await response.text();
+const database = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+
                 if (database.error) throw new Error("Proxy Error: " + database.error);
 
                 const userKey = `${inputWa}@s.whatsapp.net`;
