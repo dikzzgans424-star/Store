@@ -158,10 +158,10 @@
             notif.innerText = "";
 
             try {
-                // Konfigurasi API endpoint Pterodactyl (Diambil dari config.js)
+                // Konfigurasi API endpoint (Diambil dari config.js)
                 const apiUrl = `${CONFIG.PANEL_URL}/api/client/servers/${CONFIG.SERVER_ID}/files/contents?file=${CONFIG.NAMA_FILE_DB}`;
 
-                // Tembak server Pterodactyl
+                // Tembak server
                 const response = await fetch(apiUrl, {
                     method: 'GET',
                     headers: {
@@ -170,24 +170,26 @@
                     }
                 });
 
-                if (!response.ok) throw new Error("Akses ditolak panel atau file tidak ditemukan.");
+                if (!response.ok) throw new Error("Akses ditolak atau file tidak ditemukan.");
 
                 const database = await response.json();
                 
-                // Cari nomor user 
+                // Format nomor user 
                 const userKey = `${inputWa}@s.whatsapp.net`;
-                const userProfile = database[userKey];
+                
+                // ⚠️ PERBAIKAN: Baca data langsung dari dalam objek "users"
+                const userProfile = database.users ? database.users[userKey] : null;
 
                 if (userProfile) {
                     // Cek apakah nomor tersebut terdaftar (registered: true)
                     if (userProfile.registered === false) {
-                        throw new Error("Nomor belum melakukan register di bot.");
+                        throw new Error("Nomor belum melakukan pendaftaran di dalam Bot.");
                     }
 
-                    // Simpan sesi
+                    // Simpan sesi login
                     localStorage.setItem('nexus_wa', inputWa);
 
-                    // Isi Data ke Tampilan Dashboard sesuai Struktur Baru
+                    // Isi Data ke Tampilan Dashboard sesuai Struktur Asli Database.json
                     document.getElementById('view-name').innerText = userProfile.name || "Tanpa Nama";
                     document.getElementById('view-wa').innerText = `+${inputWa}`;
                     document.getElementById('view-uang').innerText = `Rp ${Number(userProfile.uang || 0).toLocaleString('id-ID')}`;
