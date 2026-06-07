@@ -12,7 +12,7 @@ const CONFIG = {
     SERVER_ID: "d5cf1e91", 
     
     // 3. Client API Key Pterodactyl kamu
-    API_KEY: "ptlc_IsiDenganClientApiKeyKamu", 
+    API_KEY: "ptlc_WBvDChLSbHOngjPb4nYyMYw2kN4M46xgp1bXAJHmV0f", 
     
     // 4. Letak file database kamu di panel
     NAMA_FILE_DB: "database/database.json",
