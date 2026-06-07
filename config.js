@@ -1,15 +1,15 @@
-// Konfigurasi Pusat Nexus Panel (Sudah disesuaikan dengan URL kamu)
+// Konfigurasi Pusat Nexus Panel (Sudah disesuaikan dengan URL & ID Server kamu)
 const CONFIG = {
-    // URL Panel tanpa garis miring (/) di akhir
-    PANEL_URL: "https://erine.jkt48-private.com", 
+    // Menggunakan jalur proxy Netlify agar tidak terkena hambatan CORS (Jangan diubah)
+    PANEL_URL: "/proxy-panel", 
     
-    // ID Server Bot WA kamu dari URL
+    // ID Server Bot WA kamu dari URL Pterodactyl
     SERVER_ID: "d5cf1e91", 
     
-    // ⚠️ MASUKKAN API KEY KAMU DI SINI ⚠️
-    // Buat dulu di menu "Account API" pada panel erine.jkt48-private.com kamu
+    // ⚠️ MASUKKAN API KEY CLIENT KAMU DI SINI ⚠️
+    // Buat dari menu "Account Settings" -> "API Credentials" atau "Account API" di panel
     API_KEY: "ptlc_WBvDChLSbHOngjPb4nYyMYw2kN4M46xgp1bXAJHmV0f", 
     
-    // Letak file database sesuai dengan struktur folder kamu
+    // Letak spesifik file database pada server bot kamu
     NAMA_FILE_DB: "database/database.json" 
 };
