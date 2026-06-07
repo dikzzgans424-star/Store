@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Panel - Client Area</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { neon: '#00D4FF', dark: '#0A0A0A' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="config.js"></script>
+
+    <style>
+        body { background-color: #0A0A0A; color: #FFF; overflow-x: hidden; }
+        
+        /* Glassmorphism Premium */
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Neon Glow Effects */
+        .neon-glow { box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+        .input-glass { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s; }
+        .input-glass:focus { border-color: #00D4FF; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); outline: none; }
+        
+        /* Smooth Fade Animation */
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center relative p-4">
+
+    <div class="absolute w-[500px] h-[500px] bg-neon opacity-10 blur-[120px] rounded-full pointer-events-none top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+    <div id="login-section" class="w-full max-w-md glass-panel p-8 rounded-2xl relative z-10 fade-in">
+        <div class="text-center mb-8">
+            <div class="w-14 h-14 bg-gradient-to-br from-neon to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 neon-glow">
+                <i class="fas fa-robot text-dark text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold tracking-tight">Client Portal</h2>
+            <p class="text-gray-400 text-sm mt-1">Akses dashboard profil otomatis</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nomor WhatsApp Bot</label>
+                <div class="relative">
+                    <i class="fab fa-whatsapp absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="number" id="input-wa" class="w-full input-glass text-white rounded-xl pl-11 pr-4 py-3.5 text-sm" placeholder="Contoh: 628123456789">
+                </div>
+            </div>
+            
+            <button onclick="prosesLogin()" id="btn-login" class="w-full bg-neon text-dark font-extrabold py-3.5 rounded-xl text-sm neon-glow hover:bg-white transition-all duration-300">
+                <span id="btn-text">Verifikasi Akun</span>
+            </button>
+            
+            <p id="pesan-notif" class="text-center text-sm font-medium mt-3 h-5"></p>
+        </div>
+    </div>
+
+
+    <div id="dashboard-section" class="w-full max-w-xl glass-panel rounded-2xl relative z-10 hidden fade-in overflow-hidden">
+        
+        <div class="bg-white/5 border-b border-white/5 p-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-neon/20 flex items-center justify-center border border-neon/50">
+                    <i class="fas fa-user text-neon"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-white">Profil Member</h3>
+                    <p class="text-xs text-gray-400 font-mono" id="view-wa">628xxx</p>
+                </div>
+            </div>
+            <button onclick="keluarAkun()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg text-xs font-bold transition">
+                <i class="fas fa-sign-out-alt mr-1"></i> Keluar
+            </button>
+        </div>
+
+        <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-wallet mr-1"></i> Saldo Akun</p>
+                    <h4 class="text-2xl font-black text-white" id="view-money">Rp 0</h4>
+                </div>
+
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-bolt mr-1"></i> Limit Penggunaan</p>
+                    <h4 class="text-2xl font-black text-neon" id="view-limit">0 <span class="text-sm font-medium text-gray-500">Aksi</span></h4>
+                </div>
+
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-star mr-1"></i> Level Rank</p>
+                    <h4 class="text-2xl font-black text-white" id="view-level">1</h4>
+                </div>
+
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-crown mr-1"></i> Status Member</p>
+                    <h4 class="text-2xl font-black text-yellow-400" id="view-role">User</h4>
+                </div>
+
+            </div>
+            
+            <div class="mt-6 text-center text-xs text-gray-500">
+                Data ditarik secara real-time dari database bot Pterodactyl.
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Cek apakah ada session tersimpan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedWA = localStorage.getItem('nexus_wa');
+            if (savedWA) {
+                // Kalau sudah login sebelumnya, langsung tembak ke proses fetch agar datanya paling baru
+                document.getElementById('input-wa').value = savedWA;
+                prosesLogin(); 
+            }
+        });
+
+        async function prosesLogin() {
+            const inputWa = document.getElementById('input-wa').value.trim();
+            const notif = document.getElementById('pesan-notif');
+            const btnText = document.getElementById('btn-text');
+            const btnLogin = document.getElementById('btn-login');
+
+            if (!inputWa) {
+                notif.className = "text-center text-sm font-medium mt-3 h-5 text-red-500";
+                notif.innerText = "Harap masukkan nomor WhatsApp!";
+                return;
+            }
+
+            // Ubah tampilan tombol jadi loading
+            btnLogin.disabled = true;
+            btnLogin.classList.add('opacity-70');
+            btnText.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Menghubungkan...';
+            notif.innerText = "";
+
+            try {
+                // Konfigurasi API endpoint Pterodactyl (Diambil dari config.js)
+                const apiUrl = `${CONFIG.PANEL_URL}/api/client/servers/${CONFIG.SERVER_ID}/files/contents?file=${CONFIG.NAMA_FILE_DB}`;
+
+                // Tembak server Pterodactyl
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${CONFIG.API_KEY}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error("Akses ditolak panel atau file tidak ditemukan.");
+
+                const database = await response.json();
+                
+                // Cari nomor user (Format umumnya pakai @s.whatsapp.net, sesuaikan jika botmu berbeda)
+                const userKey = `${inputWa}@s.whatsapp.net`;
+                const userProfile = database[userKey];
+
+                if (userProfile) {
+                    // Simpan sesi di browser agar tidak perlu login terus
+                    localStorage.setItem('nexus_wa', inputWa);
+
+                    // Isi Data ke Tampilan Dashboard
+                    document.getElementById('view-wa').innerText = `+${inputWa}`;
+                    document.getElementById('view-money').innerText = `Rp ${Number(userProfile.money || 0).toLocaleString('id-ID')}`;
+                    document.getElementById('view-limit').innerText = userProfile.limit || 0;
+                    document.getElementById('view-level').innerText = userProfile.level || 1;
+                    document.getElementById('view-role').innerText = userProfile.role || "Member";
+
+                    // Animasi Ganti Halaman
+                    notif.className = "text-center text-sm font-medium mt-3 h-5 text-green-400";
+                    notif.innerText = "Verifikasi Sukses!";
+                    
+                    setTimeout(() => {
+                        document.getElementById('login-section').style.display = 'none';
+                        document.getElementById('dashboard-section').style.display = 'block';
+                        
+                        // Kembalikan tombol ke semula untuk nanti
+                        btnLogin.disabled = false;
+                        btnLogin.classList.remove('opacity-70');
+                        btnText.innerText = 'Verifikasi Akun';
+                        notif.innerText = "";
+                    }, 800);
+
+                } else {
+                    throw new Error("Nomor tidak terdaftar di database.");
+                }
+
+            } catch (error) {
+                // Tampilkan error
+                btnLogin.disabled = false;
+                btnLogin.classList.remove('opacity-70');
+                btnText.innerText = 'Verifikasi Akun';
+                
+                notif.className = "text-center text-sm font-medium mt-3 h-5 text-red-500";
+                notif.innerText = error.message;
+            }
+        }
+
+        function keluarAkun() {
+            // Hapus sesi dan kembalikan ke login
+            localStorage.removeItem('nexus_wa');
+            document.getElementById('input-wa').value = "";
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
