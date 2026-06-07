@@ -1,7 +1,6 @@
 export default async (request, context) => {
   try {
     const url = new URL(request.url);
-    // Ambil parameter target panel dari kiriman web
     const targetUrl = url.searchParams.get("url");
     const apiKey = request.headers.get("Authorization");
 
@@ -9,7 +8,7 @@ export default async (request, context) => {
       return new Response("Missing url parameter", { status: 400 });
     }
 
-    // Server Netlify diam-diam menembak panel Pterodactyl kamu
+    // Mengambil data mentah (raw text) langsung dari panel
     const response = await fetch(targetUrl, {
       method: "GET",
       headers: {
@@ -18,13 +17,13 @@ export default async (request, context) => {
       }
     });
 
-    const data = await response.text();
+    const textData = await response.text();
 
-    // Kembalikan data ke browser dengan status lolos CORS 100%
-    return new Response(data, {
+    // Mengirim balik ke index.html dengan header JSON yang bersih
+    return new Response(textData, {
       status: response.status,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers": "Authorization, Content-Type"
       }
