@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Panel - Client Area</title>
+    <title>Nexus Panel - Live Database Editor</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -16,29 +16,16 @@
             }
         }
     </script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <script src="config.js"></script>
 
     <style>
         body { background-color: #0A0A0A; color: #FFF; overflow-x: hidden; }
-        
-        .glass-panel {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-        
+        .glass-panel { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
         .neon-glow { box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
-        .gold-glow { box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
-        
         .input-glass { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s; }
         .input-glass:focus { border-color: #00D4FF; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); outline: none; }
-        
         .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -50,10 +37,10 @@
     <div id="login-section" class="w-full max-w-md glass-panel p-8 rounded-2xl relative z-10 fade-in">
         <div class="text-center mb-8">
             <div class="w-14 h-14 bg-gradient-to-br from-neon to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 neon-glow">
-                <i class="fas fa-robot text-dark text-2xl"></i>
+                <i class="fas fa-shield-halved text-dark text-2xl"></i>
             </div>
             <h2 class="text-2xl font-extrabold tracking-tight">Client Portal</h2>
-            <p class="text-gray-400 text-sm mt-1">Akses dashboard profil otomatis</p>
+            <p class="text-gray-400 text-sm mt-1">Masuk dengan Nomor & SN Akun</p>
         </div>
 
         <div class="space-y-5">
@@ -61,26 +48,25 @@
                 <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Nomor WhatsApp Bot</label>
                 <div class="relative">
                     <i class="fab fa-whatsapp absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="number" id="input-wa" class="w-full input-glass text-white rounded-xl pl-11 pr-4 py-3.5 text-sm" placeholder="Contoh: 628123456789">
+                    <input type="number" id="input-wa" class="w-full input-glass text-white rounded-xl pl-11 pr-4 py-3.5 text-sm" placeholder="Contoh: 6285810287828">
                 </div>
             </div>
-            
-            <button onclick="prosesLogin()" id="btn-login" class="w-full bg-neon text-dark font-extrabold py-3.5 rounded-xl text-sm neon-glow hover:bg-white transition-all duration-300">
-                <span id="btn-text">Verifikasi Akun</span>
-            </button>
-            
+            <div>
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Serial Number (SN)</label>
+                <div class="relative">
+                    <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="input-sn" class="w-full input-glass text-white rounded-xl pl-11 pr-4 py-3.5 text-sm font-mono" placeholder="Kosongkan jika Anda Owner Utama">
+                </div>
+            </div>
+            <button onclick="prosesLogin()" id="btn-login" class="w-full bg-neon text-dark font-extrabold py-3.5 rounded-xl text-sm neon-glow hover:bg-white transition-all duration-300">Verifikasi Masuk</button>
             <p id="pesan-notif" class="text-center text-sm font-medium mt-3 h-5"></p>
         </div>
     </div>
 
-
     <div id="dashboard-section" class="w-full max-w-xl glass-panel rounded-2xl relative z-10 hidden fade-in overflow-hidden">
-        
-        <div class="bg-white/5 border-b border-white/5 p-6 flex justify-between items-center relative overflow-hidden">
-            <div class="flex items-center gap-4 relative z-10">
-                <div class="w-12 h-12 rounded-full bg-neon/20 flex items-center justify-center border border-neon/50">
-                    <i class="fas fa-user-astronaut text-neon text-lg"></i>
-                </div>
+        <div class="bg-white/5 border-b border-white/5 p-6 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-neon/20 flex items-center justify-center border border-neon/50"><i class="fas fa-user-astronaut text-neon text-lg"></i></div>
                 <div>
                     <h3 class="font-bold text-lg text-white" id="view-name">Nama User</h3>
                     <div class="flex items-center gap-2">
@@ -89,166 +75,211 @@
                     </div>
                 </div>
             </div>
-            <button onclick="keluarAkun()" class="relative z-10 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg text-xs font-bold transition">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
+            <button onclick="keluarAkun()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg text-xs font-bold transition"><i class="fas fa-sign-out-alt"></i></button>
         </div>
 
-        <div id="banned-banner" class="hidden bg-red-500/20 border-b border-red-500/30 p-3 text-center">
-            <p class="text-xs font-bold text-red-400 uppercase tracking-wider"><i class="fas fa-ban mr-1"></i> Akun Anda telah dibanned dari sistem Bot</p>
-        </div>
+        <div id="banned-banner" class="hidden bg-red-500/20 border-b border-red-500/30 p-3 text-center"><p class="text-xs font-bold text-red-400 uppercase tracking-wider"><i class="fas fa-ban mr-1"></i> Status Akun Anda Terbanned</p></div>
 
-        <div class="p-6">
+        <div class="p-6 space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-wallet mr-1"></i> Saldo Dompet</p>
-                    <h4 class="text-2xl font-black text-white" id="view-uang">Rp 0</h4>
-                </div>
-
-                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-building-columns mr-1"></i> Saldo Bank</p>
-                    <h4 class="text-2xl font-black text-white" id="view-bank">Rp 0</h4>
-                </div>
-
-                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-bolt mr-1"></i> Limit Tersedia</p>
-                    <h4 class="text-2xl font-black text-neon" id="view-limit">0 <span class="text-sm font-medium text-gray-500">Aksi</span></h4>
-                </div>
-
-                <div class="bg-black/40 border border-white/10 p-5 rounded-xl hover:border-neon/50 transition">
-                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1"><i class="fas fa-tags mr-1"></i> Status Tag</p>
-                    <h4 class="text-xl font-bold text-emerald-400 truncate" id="view-tag">Member</h4>
-                </div>
-
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl"><p class="text-xs text-gray-400 font-bold mb-1">Saldo Dompet</p><h4 class="text-2xl font-black text-white" id="view-uang">Rp 0</h4></div>
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl"><p class="text-xs text-gray-400 font-bold mb-1">Saldo Bank</p><h4 class="text-2xl font-black text-white" id="view-bank">Rp 0</h4></div>
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl"><p class="text-xs text-gray-400 font-bold mb-1">Limit Tersedia</p><h4 class="text-2xl font-black text-neon" id="view-limit">0</h4></div>
+                <div class="bg-black/40 border border-white/10 p-5 rounded-xl"><p class="text-xs text-gray-400 font-bold mb-1">Status Tag</p><h4 class="text-xl font-bold text-emerald-400 truncate" id="view-tag">Member</h4></div>
             </div>
             
-            <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+            <div id="owner-edit-panel" class="hidden border border-neon/30 bg-neon/5 p-5 rounded-xl space-y-4">
+                <div class="flex items-center gap-2 border-b border-white/10 pb-2">
+                    <i class="fas fa-user-gear text-neon"></i>
+                    <h4 class="text-sm font-black text-neon uppercase tracking-wider">Live Database Management (Owner Engine)</h4>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Nomor WA Target</label>
+                        <input type="number" id="edit-target-wa" class="w-full input-glass text-white rounded-lg px-3 py-2 text-xs" placeholder="Contoh: 6285773797508">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Pilih Tindakan / Aksi</label>
+                        <select id="edit-action" class="w-full input-glass text-white rounded-lg px-3 py-2 text-xs">
+                            <option value="add_uang">ADD (Tambah Uang Dompet)</option>
+                            <option value="set_uang">SET (Ubah Total Uang Dompet)</option>
+                            <option value="add_limit">ADD (Tambah Jumlah Limit)</option>
+                            <option value="set_limit">SET (Ubah Total Jumlah Limit)</option>
+                            <option value="set_vip">SET (Ubah Status Status VIP)</option>
+                            <option value="set_banned">DELETE / BANNED (Blokir Akses User)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Nilai / Value</label>
+                        <input type="text" id="edit-amount" class="w-full input-glass text-white rounded-lg px-3 py-2 text-xs" placeholder="Contoh: 50000 atau true/false">
+                    </div>
+                    <button onclick="eksekusiEditUser()" id="btn-edit" class="w-full bg-neon text-dark text-xs font-extrabold py-2.5 rounded-lg hover:bg-white transition-all shadow-[0_0_10px_rgba(0,212,255,0.2)]">Kirim Perintah WebAPI</button>
+                </div>
+                <p id="edit-notif" class="text-xs text-center font-bold h-4"></p>
+            </div>
+
+            <div class="flex items-center justify-between border-t border-white/5 pt-4">
                 <p class="text-[10px] text-gray-500 font-mono">SN: <span id="view-sn">...</span></p>
-                <p class="text-[10px] text-gray-500">Umur Terdaftar: <span id="view-age" class="font-bold text-gray-300">0</span> Thn</p>
+                <p class="text-[10px] text-gray-500">Umur Akun: <span id="view-age" class="font-bold text-gray-300">0</span> Thn</p>
             </div>
         </div>
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const savedWA = localStorage.getItem('nexus_wa');
-            if (savedWA) {
-                document.getElementById('input-wa').value = savedWA;
-                prosesLogin(); 
-            }
+            if (savedWA) { document.getElementById('input-wa').value = savedWA; prosesLogin(); }
         });
 
         async function prosesLogin() {
             const inputWa = document.getElementById('input-wa').value.trim();
+            const inputSn = document.getElementById('input-sn').value.trim();
             const notif = document.getElementById('pesan-notif');
-            const btnText = document.getElementById('btn-text');
             const btnLogin = document.getElementById('btn-login');
 
-            if (!inputWa) {
-                notif.className = "text-center text-sm font-medium mt-3 h-5 text-red-500";
-                notif.innerText = "Harap masukkan nomor WhatsApp!";
-                return;
-            }
-
+            if (!inputWa) return;
             btnLogin.disabled = true;
-            btnLogin.classList.add('opacity-70');
-            btnText.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Mengecek Database...';
-            notif.innerText = "";
+            notif.className = "text-center text-sm font-medium mt-3 h-5 text-neon";
+            notif.innerText = "Connecting to Pterodactyl...";
 
             try {
-                // Konfigurasi API endpoint (Diambil dari config.js)
-                const apiUrl = `${CONFIG.PANEL_URL}/api/client/servers/${CONFIG.SERVER_ID}/files/contents?file=${CONFIG.NAMA_FILE_DB}`;
-
-                // Tembak server
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${CONFIG.API_KEY}`,
-                        'Accept': 'application/json'
-                    }
-                });
-
-                if (!response.ok) throw new Error("Akses ditolak atau file tidak ditemukan.");
-
-                const database = await response.json();
+                // Membaca database menggunakan generator URL AllOrigins dari config.js
+                const response = await fetch(CONFIG.PANEL_URL);
+                if (!response.ok) throw new Error("Gagal mengambil data dari server panel.");
                 
-                // Format nomor user 
+                const database = await response.json();
                 const userKey = `${inputWa}@s.whatsapp.net`;
                 
-                // ⚠️ PERBAIKAN: Baca data langsung dari dalam objek "users"
-                const userProfile = database.users ? database.users[userKey] : null;
+                let userProfile = null;
+                let isOwnerGroup = false;
+
+                // Memisahkan pencarian kelompok "set" (Owner) dan "users" (Member)
+                if (database.set && database.set[userKey]) {
+                    userProfile = database.set[userKey];
+                    isOwnerGroup = true;
+                } else if (database.users && database.users[userKey]) {
+                    userProfile = database.users[userKey];
+                }
 
                 if (userProfile) {
-                    // Cek apakah nomor tersebut terdaftar (registered: true)
-                    if (userProfile.registered === false) {
-                        throw new Error("Nomor belum melakukan pendaftaran di dalam Bot.");
+                    // Proteksi Keamanan Member
+                    if (!isOwnerGroup) {
+                        if (userProfile.registered !== true) throw new Error("Nomor belum terdaftar di sistem bot!");
+                        if (!inputSn) throw new Error("Serial Number (SN) wajib diisi!");
+                        if (userProfile.sn !== inputSn) throw new Error("Serial Number (SN) Salah!");
+                    } else {
+                        if (userProfile.sn && userProfile.sn !== inputSn) throw new Error("SN Owner Salah!");
                     }
 
-                    // Simpan sesi login
                     localStorage.setItem('nexus_wa', inputWa);
 
-                    // Isi Data ke Tampilan Dashboard sesuai Struktur Asli Database.json
-                    document.getElementById('view-name').innerText = userProfile.name || "Tanpa Nama";
+                    // Sinkronisasi data ke tampilan panel UI
+                    document.getElementById('view-name').innerText = userProfile.name || (isOwnerGroup ? "Sistem Developer / Owner" : "Tanpa Nama");
                     document.getElementById('view-wa').innerText = `+${inputWa}`;
                     document.getElementById('view-uang').innerText = `Rp ${Number(userProfile.uang || 0).toLocaleString('id-ID')}`;
                     document.getElementById('view-bank').innerText = `Rp ${Number(userProfile.bank || 0).toLocaleString('id-ID')}`;
                     document.getElementById('view-limit').innerText = userProfile.limit || 0;
-                    document.getElementById('view-tag').innerText = userProfile.tag || "Member Biasa";
-                    document.getElementById('view-age').innerText = userProfile.age || "?";
-                    document.getElementById('view-sn').innerText = userProfile.sn || "Tidak Ada SN";
+                    document.getElementById('view-tag').innerText = userProfile.tag || (isOwnerGroup ? "Developer" : "Member");
+                    document.getElementById('view-age').innerText = userProfile.age || "-";
+                    document.getElementById('view-sn').innerText = userProfile.sn || "Bypassed (Owner)");
 
-                    // Logika Badge VIP
-                    if (userProfile.vip === true) {
-                        document.getElementById('view-vip').classList.remove('hidden');
-                    } else {
-                        document.getElementById('view-vip').classList.add('hidden');
+                    document.getElementById('view-vip').className = (userProfile.vip || userProfile.owneronly) ? "text-[10px] font-bold bg-gold/20 text-gold border border-gold/50 px-2 py-0.5 rounded-full uppercase" : "hidden";
+                    document.getElementById('banned-banner').className = userProfile.banned ? "bg-red-500/20 border-b border-red-500/30 p-3 text-center" : "hidden";
+
+                    // Aktifkan Konsol Editor jika nomor yang masuk adalah Owner/Group "set"
+                    if (isOwnerGroup || userProfile.owneronly === true) {
+                        document.getElementById('owner-edit-panel').classList.remove('hidden');
                     }
 
-                    // Logika Status Banned
-                    if (userProfile.banned === true) {
-                        document.getElementById('banned-banner').classList.remove('hidden');
-                    } else {
-                        document.getElementById('banned-banner').classList.add('hidden');
-                    }
-
-                    // Animasi Ganti Halaman
                     notif.className = "text-center text-sm font-medium mt-3 h-5 text-green-400";
-                    notif.innerText = "Verifikasi Sukses!";
+                    notif.innerText = "Sukses!";
                     
                     setTimeout(() => {
                         document.getElementById('login-section').style.display = 'none';
                         document.getElementById('dashboard-section').style.display = 'block';
-                        
-                        // Kembalikan tombol ke semula untuk nanti
                         btnLogin.disabled = false;
-                        btnLogin.classList.remove('opacity-70');
-                        btnText.innerText = 'Verifikasi Akun';
                         notif.innerText = "";
-                    }, 800);
-
+                    }, 500);
                 } else {
                     throw new Error("Nomor tidak terdaftar di database.");
                 }
-
             } catch (error) {
                 btnLogin.disabled = false;
-                btnLogin.classList.remove('opacity-70');
-                btnText.innerText = 'Verifikasi Akun';
-                
                 notif.className = "text-center text-sm font-medium mt-3 h-5 text-red-500";
                 notif.innerText = error.message;
+            }
+        }
+
+        // FUNGSI INTI UNTUK ADD, SET, DAN DELETE (BANNED) VIA EXPRESS API
+        async function eksekusiEditUser() {
+            const targetWa = document.getElementById('edit-target-wa').value.trim();
+            let action = document.getElementById('edit-action').value;
+            let amount = document.getElementById('edit-amount').value.trim();
+            const editNotif = document.getElementById('edit-notif');
+            const btnEdit = document.getElementById('btn-edit');
+
+            if(!targetWa) return alert("Harap masukkan nomor WhatsApp target!");
+            
+            // Pengkondisian Khusus untuk Menu Delete / Banned
+            if (action === 'set_banned') {
+                action = 'set_vip'; // Menembak variabel vip
+                amount = 'false';  // Menurunkan status
+                // Kamu juga bisa menyesuaikan aksi penambahan ban di webapi jika dibutuhkan
+            }
+
+            if(!amount) return alert("Harap isi kolom Nilai / Value!");
+
+            btnEdit.disabled = true;
+            btnEdit.innerText = "Executing Request...";
+            editNotif.innerText = "";
+
+            try {
+                // Menembak port Express bot kamu (4510) secara langsung
+                const response = await fetch(`${CONFIG.BOT_API_URL}/api/update-user`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        targetNumber: targetWa,
+                        actionType: action,
+                        amount: amount,
+                        secret: CONFIG.SECRET_KEY
+                    })
+                });
+
+                const hasil = await response.json();
+
+                if (hasil.status === true) {
+                    editNotif.className = "text-xs text-center font-bold text-green-400";
+                    editNotif.innerText = `Sukses: ${hasil.msg}`;
+                    
+                    // Otomatis refresh data di layar jika kamu mengedit akunmu sendiri
+                    if(targetWa === localStorage.getItem('nexus_wa')) {
+                        setTimeout(() => prosesLogin(), 1200);
+                    }
+                } else {
+                    throw new Error(hasil.msg || "Gagal memperbarui data.");
+                }
+            } catch (err) {
+                editNotif.className = "text-xs text-center font-bold text-red-500";
+                editNotif.innerText = `Error: ${err.message}`;
+            } finally {
+                btnEdit.disabled = false;
+                btnEdit.innerText = "Kirim Perintah WebAPI";
             }
         }
 
         function keluarAkun() {
             localStorage.removeItem('nexus_wa');
             document.getElementById('input-wa').value = "";
+            document.getElementById('input-sn').value = "";
+            document.getElementById('owner-edit-panel').classList.add('hidden');
             document.getElementById('dashboard-section').style.display = 'none';
             document.getElementById('login-section').style.display = 'block';
         }
     </script>
-
 </body>
 </html>
